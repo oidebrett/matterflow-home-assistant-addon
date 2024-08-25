@@ -1,20 +1,14 @@
 {
-  "name": "Reverse Entity Addon",
-  "version": "1.0",
-  "slug": "reverser",
-  "description": "Add-on that reverses the state of an entity in Core",
-  "url": "https://github.com/issacg/hassio-addon-reverse",
+  "name": "Matterflow",
+  "version": "1.0.0",
+  "slug": "matterflow",
+  "description": "Add-on that provide data pipeline based flows for Matter devices",
+  "url": "https://github.com/oidebrett/matterflow-home-assistant-addon",
   "startup": "application",
   "boot": "auto",
   "options": {
-    "read_sensor": "weather.home",
-    "write_sensor": "weather.reversed",
-    "poll_interval": 5
   },
   "schema": {
-    "read_sensor": "str",
-    "write_sensor": "str",
-    "poll_interval": "int(1,30)"
   }, 
   "ingress": true,
   "ingress_port": 0,
