@@ -3,12 +3,12 @@ FROM $BUILD_FROM
 
 ENV LANG C.UTF-8
 
-WORKDIR /app
+WORKDIR /react-template
 RUN apk add --update --no-cache nodejs npm dumb-init
-COPY /app/package.json /app/package-lock.json /app/
+COPY /react-template/package.json /react-template/package-lock.json /react-template/
 RUN npm install
-COPY /app/ /app/
-COPY start.sh /app/start.sh
-ENTRYPOINT ["/app/start.sh"]
+COPY /react-template/ /react-template/
+COPY start.sh /react-template/start.sh
+ENTRYPOINT ["/react-template/start.sh"]
 
 LABEL io.hass.version="VERSION" io.hass.type="addon" io.hass.arch="armhf|aarch64|i386|amd64"

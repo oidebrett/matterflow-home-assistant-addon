@@ -3,4 +3,4 @@ set -e
 
 bashio::log.info "==> Starting application"
 
-exec node /app/app.js
+exec npm run dev
