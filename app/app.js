@@ -5,7 +5,6 @@ const express = require('express'),
       bent = require('bent'),
       fs = require('fs').promises;
 
-
 async function main() {
     let app = express();
     // Configure logging
@@ -26,7 +25,7 @@ async function main() {
 
     // Configure web application
     app.use('/', async (req, res) => {
-        res.send(`HTTP Response successful..`);
+        res.send(`HTTP Response successful..`+JSON.stringify(req));
     });
     if (suconfig.data.ingress === true) {
         app.listen(suconfig.data.ingress_port);
