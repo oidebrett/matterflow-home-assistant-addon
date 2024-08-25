@@ -25,7 +25,8 @@ async function main() {
 
     // Configure web application
     app.use('/', async (req, res) => {
-        res.send(`HTTP Response successful..`+JSON.stringify(req));
+        var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+        res.send("Hello World!:" + fullUrl);
     });
     if (suconfig.data.ingress === true) {
         app.listen(suconfig.data.ingress_port);
