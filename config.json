@@ -12,6 +12,9 @@
   }, 
   "ingress": true,
   "ingress_port": 5173,
+  "ports": {
+    "5173/tcp": 5173
+  },  
   "homeassistant_api": true,
   "arch": ["amd64", "armv7", "armhf", "i386" , "aarch64"]
 }
