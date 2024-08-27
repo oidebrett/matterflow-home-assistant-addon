@@ -1,6 +1,7 @@
 #!/usr/bin/dumb-init bashio
+# shellcheck shell=bash
 set -e
 
 bashio::log.info "==> Starting application"
 
-exec npm run dev
+exec serve -s dist

@@ -1,14 +1,26 @@
-ARG BUILD_FROM=homeassistant/amd64-base:latest
-FROM $BUILD_FROM
+ARG BUILD_FROM
+FROM $BUILD_FROM as base
 
 ENV LANG C.UTF-8
 
-WORKDIR /react-template
-RUN apk add --update --no-cache nodejs npm dumb-init
-COPY /react-template/package.json /react-template/package-lock.json /react-template/
-RUN npm install
-COPY /react-template/ /react-template/
-COPY start.sh /react-template/start.sh
-ENTRYPOINT ["/react-template/start.sh"]
+WORKDIR /matterflow
 
-LABEL io.hass.version="VERSION" io.hass.type="addon" io.hass.arch="armhf|aarch64|i386|amd64"
+RUN apk add --update --no-cache npm dumb-init git python3 py3-pip python3-dev && \
+    echo "Installing MatterFlow"
+
+RUN git clone https://github.com/MatterCoder/matterflow.git /matterflow && \
+    mkdir /matterflow/dist && \
+    jq -n --arg commit $(eval cd /matterflow;git rev-parse --short HEAD) '$commit' > /matterflow/dist/.hash ; \
+    echo "Installed MatterFlow @ version $(cat /matterflow/dist/.hash)" 
+
+WORKDIR /matterflow/web
+
+RUN npm install
+RUN npm install -g serve
+RUN npm run build
+
+# Copy data for add-on
+COPY start.sh .
+RUN chmod +x start.sh
+CMD ["./start.sh"]
+

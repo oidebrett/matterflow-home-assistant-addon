@@ -1,0 +1,29 @@
+---
+version: 0.0.1
+slug: matterflow
+name: Matterflow
+description: Matterflow - the data intelligence hub for Matter
+url: https://github.com
+arch:
+  - armhf
+  - armv7
+  - aarch64
+  - amd64
+  - i386
+homeassistant_api: true
+panel_admin: false
+hassio_api: true
+ingress: false
+ingress_stream: false
+webui: http://[HOST]:[PORT:3000]
+init: false
+map:
+  - all_addon_configs:rw
+  - backup:rw
+  - homeassistant_config:rw
+  - media:rw
+  - share:rw
+  - ssl:rw
+  - addon_config:rw
+ports:
+  3000/tcp: 3000
