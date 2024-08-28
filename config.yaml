@@ -15,7 +15,7 @@ panel_admin: false
 hassio_api: true
 ingress: false
 ingress_stream: false
-webui: http://[HOST]:[PORT:3000]
+webui: http://[HOST]:[PORT:5173]
 init: false
 map:
   - all_addon_configs:rw
@@ -26,4 +26,5 @@ map:
   - ssl:rw
   - addon_config:rw
 ports:
-  3000/tcp: 3000
+  5173/tcp: 5173
+  8000/tcp: 8000

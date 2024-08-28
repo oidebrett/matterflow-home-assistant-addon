@@ -13,6 +13,21 @@ RUN git clone https://github.com/MatterCoder/matterflow.git /matterflow && \
     jq -n --arg commit $(eval cd /matterflow;git rev-parse --short HEAD) '$commit' > /matterflow/dist/.hash ; \
     echo "Installed MatterFlow @ version $(cat /matterflow/dist/.hash)" 
 
+WORKDIR /matterflow/api
+
+ENV VIRTUAL_ENV=./venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN $VIRTUAL_ENV/bin/pip install pipenv
+
+# Install dependencies:
+RUN . /matterflow/api/venv/bin/activate && pipenv install
+
+# Set up not so Secret Key
+RUN echo "SECRET_KEY=tmp" > mf/.environment
+
+# Install Web front end
 WORKDIR /matterflow/web
 
 RUN npm install
@@ -20,7 +35,8 @@ RUN npm install -g serve
 RUN npm run build
 
 # Copy data for add-on
-COPY start.sh .
-RUN chmod +x start.sh
-CMD ["./start.sh"]
+COPY run.sh .
+RUN chmod +x run.sh
+
+CMD ["./run.sh"]
 
