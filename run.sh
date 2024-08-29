@@ -5,6 +5,11 @@ echo "==> Starting Matterflow API backend"
 source /matterflow/api/venv/bin/activate
 
 cd /matterflow/api/mf
+
+#Migrate the sql database
+python3 manage.py migrate
+
+#Start the server
 python3 manage.py runserver &
 echo "Matterflow API backend started!"
 

@@ -27,6 +27,9 @@ RUN . /matterflow/api/venv/bin/activate && pipenv install
 # Set up not so Secret Key
 RUN echo "SECRET_KEY=tmp" > mf/.environment
 
+# Set up the address for the Matter python server websocket
+RUN echo "MATTER_SERVER=core-matter-server.local.hass.io" >> mf/.environment
+
 # Install Web front end
 WORKDIR /matterflow/web
 
