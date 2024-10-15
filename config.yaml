@@ -1,5 +1,5 @@
 ---
-version: 0.0.1
+version: 0.0.3
 slug: matterflow
 name: Matterflow
 description: Matterflow - the data intelligence hub for Matter
@@ -15,7 +15,7 @@ panel_admin: false
 hassio_api: true
 ingress: false
 ingress_stream: false
-webui: http://[HOST]:[PORT:5173]
+webui: http://[HOST]:[PORT:4173]
 init: false
 map:
   - all_addon_configs:rw
@@ -26,5 +26,5 @@ map:
   - ssl:rw
   - addon_config:rw
 ports:
-  5173/tcp: 5173
+  4173/tcp: 4173
   8000/tcp: 8000

@@ -24,6 +24,9 @@ RUN $VIRTUAL_ENV/bin/pip install pipenv
 # Install dependencies:
 RUN . /matterflow/api/venv/bin/activate && pipenv install
 
+# Install supervisord:
+RUN $VIRTUAL_ENV/bin/pip install supervisor
+
 # Set up not so Secret Key
 RUN echo "SECRET_KEY=tmp" > mf/.environment
 
@@ -34,7 +37,6 @@ RUN echo "MATTER_SERVER=core-matter-server.local.hass.io" >> mf/.environment
 WORKDIR /matterflow/web
 
 RUN npm install
-RUN npm install -g serve
 RUN npm run build
 
 # Copy data for add-on
