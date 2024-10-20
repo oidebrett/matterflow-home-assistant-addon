@@ -14,7 +14,7 @@ cd /matterflow/api/mf
 python3 manage.py migrate
 
 #Start the server
-python3 manage.py runserver &
+PYTHONWARNINGS="ignore" python3 manage.py runserver &
 echo "Matterflow API backend started!"
 
 echo "==> Starting Matterflow Web application"
