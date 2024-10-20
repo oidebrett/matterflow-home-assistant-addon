@@ -13,6 +13,7 @@ RUN git clone https://github.com/MatterCoder/matterflow.git /matterflow && \
     jq -n --arg commit $(eval cd /matterflow;git rev-parse --short HEAD) '$commit' > /matterflow/dist/.hash ; \
     echo "Installed MatterFlow @ version $(cat /matterflow/dist/.hash)" 
 
+# Move into the api directory
 WORKDIR /matterflow/api
 
 ENV VIRTUAL_ENV=./venv
