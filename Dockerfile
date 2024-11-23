@@ -34,6 +34,9 @@ RUN echo "SECRET_KEY=tmp" > mf/.environment
 # Set up the address for the Matter python server websocket
 RUN echo "MATTER_SERVER=core-matter-server.local.hass.io" >> mf/.environment
 
+# Set up the path for the sqlite3 db to be the tmp which we have mapped to /config 
+RUN echo "DB_DIR_PATH='/tmp'" >> mf/.environment
+
 # Install Web front end
 WORKDIR /matterflow/web
 
@@ -45,4 +48,5 @@ COPY run.sh .
 RUN chmod +x run.sh
 
 CMD ["./run.sh"]
+
 

@@ -1,5 +1,10 @@
 #!/usr/bin/with-contenv bashio
 
+echo "==> Mapping /tmp to /config"
+chmod 1777  /config  
+rm -rf /tmp  
+ln -s /config /tmp  
+
 echo "==> Starting Matterflow API backend"
 
 source /matterflow/api/venv/bin/activate
