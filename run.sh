@@ -7,6 +7,7 @@ ln -s /config /tmp
 
 echo "==> Starting Matterflow API backend"
 
+# Activate the virtual environment
 source /matterflow/api/venv/bin/activate
 
 #Start supervisord
@@ -20,11 +21,10 @@ python3 manage.py migrate
 
 #Start the server
 PYTHONWARNINGS="ignore" python3 manage.py runserver &
-echo "Matterflow API backend started!"
+echo "==> Matterflow API backend started!"
 
+#Start the web interface
 echo "==> Starting Matterflow Web application"
-
 cd /matterflow/web
-#npm run dev
-npm run preview
-echo "Matterflow Web application started!"
+npm run preview 
+echo "==> Matterflow Web application started!"
