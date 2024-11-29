@@ -1,8 +1,7 @@
-ARG BUILD_FROM
-FROM $BUILD_FROM as base
+# Allow overriding of the base image
+ARG BUILD_FROM="ghcr.io/home-assistant/amd64-base-python"
 
-ENV LANG C.UTF-8
-
+FROM --platform=$BUILDPLATFORM ${BUILD_FROM} AS build
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 # Build arguments
@@ -20,7 +19,7 @@ ENV LANG=C.UTF-8
 
 # Install build tools and create venv
 RUN echo "Installing Build tools" 
-RUN apk add --update --no-cache git jq cargo npm dumb-init git python3 py3-pip python3-dev && \
+RUN apk add --update --no-cache git jq cargo npm dumb-init && \
     echo "Installing MatterFlow"
 
 WORKDIR /matterflow/
@@ -34,9 +33,8 @@ RUN git clone https://github.com/MatterCoder/matterflow.git . && \
 WORKDIR /matterflow/api
 
 # Create venv and install Python dependencies
-RUN echo "Install Python dependencies" && \
+RUN echo "Creating Python venv" && \
     python3 -m venv venv
-
 
 # Debug TARGETPLATFORM
 RUN echo "Target platform is $TARGETPLATFORM"
@@ -49,11 +47,22 @@ RUN echo "Conditionally Install Python dependencies" && \
         venv/bin/pip install --no-cache-dir -r requirements.txt; \
     fi
 
-# Verify Python dependencies
-RUN /matterflow/api/venv/bin/pip show numpy pandas cryptography
-
 # Install supervisord:
 RUN /matterflow/api/venv/bin/pip install supervisor
+
+# Download the latest python matter server dashboard - note 
+# we still require the python matter server to run as a separate docker container
+RUN echo "Installing Python Matter Server Dashboard"
+
+# Git clone the python matter server
+RUN git clone https://github.com/home-assistant-libs/python-matter-server.git /python-matter-server && \
+    mkdir /python-matter-server/dist && \
+    jq -n --arg commit $(eval cd /python-matter-server;git rev-parse --short HEAD) '$commit' > /python-matter-server/dist/.hash ; \
+    echo "Installed Python-matter-server @ version $(cat /python-matter-server/dist/.hash)"
+
+# Install the python matter server
+WORKDIR /python-matter-server
+RUN /matterflow/api/venv/bin/pip install python-matter-server
 
 WORKDIR /matterflow/api
 
@@ -61,10 +70,10 @@ WORKDIR /matterflow/api
 RUN echo "SECRET_KEY=tmp" > mf/.environment
 
 # Set up the address for the Matter python server websocket
-RUN echo "MATTER_SERVER=core-matter-server.local.hass.io" >> mf/.environment
+RUN echo "MATTER_SERVER=localhost" >> mf/.environment
 
 # Set up the path for the sqlite3 db to be the tmp which we have mapped to /config 
-RUN echo "DB_DIR_PATH='/tmp'" >> mf/.environment
+RUN echo "DB_DIR_PATH='/data'" >> mf/.environment
 
 # Install Node.js and npm
 RUN apk add --no-cache nodejs npm
@@ -78,8 +87,11 @@ RUN npm ci
 RUN npm run build
 
 # Copy data for add-on
-COPY run.sh .
-RUN chmod +x run.sh
+WORKDIR /matterflow/
+COPY run.sh /
+RUN chmod +x /run.sh
+
+CMD ["/run.sh"]
 
 # Labels
 LABEL \
@@ -98,6 +110,3 @@ LABEL \
     org.opencontainers.image.revision=${BUILD_REF} \
     org.opencontainers.image.version=${BUILD_VERSION}
     
-CMD ["./run.sh"]
-
-
